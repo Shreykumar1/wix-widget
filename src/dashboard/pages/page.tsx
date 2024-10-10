@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { useState, type FC } from 'react';
 import { dashboard } from '@wix/dashboard';
 import {
   Button,
@@ -7,12 +7,24 @@ import {
   Page,
   TextButton,
   WixDesignSystemProvider,
+  ToggleSwitch,
+  Box,
 } from '@wix/design-system';
 import '@wix/design-system/styles.global.css';
 import * as Icons from '@wix/wix-ui-icons-common';
 import wixLogo from './wix_logo.svg';
 
 const Index: FC = () => {
+  const [isChatEnabled, setIsChatEnabled] = useState(false);
+
+  const handleChatToggle = (value: boolean) => {
+    setIsChatEnabled(value);
+    // Here you would typically save this setting to your backend
+    dashboard.showToast({
+      message: `Chat widget ${value ? 'enabled' : 'disabled'}`,
+    });
+  };
+
   return (
     <WixDesignSystemProvider>
       <Page>
@@ -20,16 +32,13 @@ const Index: FC = () => {
           title="Dashboard Page"
           subtitle="Add management capabilities to your app."
           actionsBar={
-            <Button
-              onClick={() => {
-                dashboard.showToast({
-                  message: 'Your first toast message!',
-                });
-              }}
-              prefixIcon={<Icons.GetStarted />}
-            >
-              Show a toast
-            </Button>
+            <Box>
+              <ToggleSwitch
+                checked={isChatEnabled}
+                onChange={(e) => handleChatToggle(e.target.checked)}
+              />
+              <span style={{ marginLeft: '10px' }}>Enable Chat Widget</span>
+            </Box>
           }
         />
         <Page.Content>
